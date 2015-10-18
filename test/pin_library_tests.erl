@@ -3,11 +3,12 @@
 -include_lib("../src/pin_record.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
--define(ExportFile, "/sys/class/gpio/export").
+-define(ExportFile, "some_file").
 
 fixture_startup_test() ->
   application:set_env(mousetrap, pins_export_file, ?ExportFile),
-  meck:new(file, [unstick, passthrough]).
+  meck:new(file, [unstick, passthrough]),
+  meck:expect(file, write_file, 2, ok).
 
 initialize_pins_exports_pins_empty_test() ->
   Actual = pin_library:initialize_pins([]),
@@ -32,3 +33,6 @@ validate_pin_export(Bank, BankPin, SoftwarePin) ->
 
   ?assertEqual(ok, Actual),
   ?assert(meck:called(file, write_file, [?ExportFile, SoftwarePin])).
+
+fixture_teardown_test() ->
+  meck:unload().

@@ -9,8 +9,7 @@ initialize_pins([#pin{} = Pin|_T]) ->
 
 export_pin(Pin) ->
   {ok, ExportFile} = application:get_env(mousetrap, pins_export_file),
-  file:write_file(ExportFile, get_software_pin(Pin)),
-  ok.
+  file:write_file(ExportFile, get_software_pin(Pin)).
 
 get_software_pin(#pin{bank=gpio0, bank_pin=Pin}) -> get_software_pin(0 + Pin);
 get_software_pin(#pin{bank=gpio1, bank_pin=Pin}) -> get_software_pin(30 + Pin);
