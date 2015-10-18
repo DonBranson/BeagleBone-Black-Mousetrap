@@ -1,0 +1,11 @@
+{
+	{slack_url, "https://hooks.slack.com/services/blah/blah/blah"},
+	{bank_pins,
+		[
+			{30, "1 (over workshop door)"},
+			{31, "2 (by basement freezer)"},
+			{48, "3 (in the kitchen pantry)"},
+			{5, "4 (Not yet wired)"}
+		]
+	}
+}.
