@@ -14,7 +14,6 @@ export_pin(Pin) ->
 
 set_pin_for_input(Pin) ->
   {ok, PinsRootDirectory} = application:get_env(mousetrap, pins_root_directory),
-  io:format("aaa ~p~n", [PinsRootDirectory ++ get_software_pin(Pin) ++ "/directory"]),
   file:write_file(PinsRootDirectory ++ get_software_pin(Pin) ++ "/direction", "in").
 
 get_software_pin(#pin{bank=gpio0, bank_pin=Pin}) -> get_software_pin(0 + Pin);
