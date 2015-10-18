@@ -1,0 +1,1 @@
+-record(pin, {bank, bank_pin, description}).
