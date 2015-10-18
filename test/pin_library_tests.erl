@@ -3,10 +3,12 @@
 -include_lib("../src/pin_record.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
--define(ExportFile, "some_file").
+-define(ExportFile, "export_file").
+-define(PinsRootDir, "pins_root").
 
 fixture_startup_test() ->
   application:set_env(mousetrap, pins_export_file, ?ExportFile),
+  application:set_env(mousetrap, pins_root_directory, ?PinsRootDir),
   meck:new(file, [unstick, passthrough]),
   meck:expect(file, write_file, 2, ok).
 
@@ -27,6 +29,15 @@ initialize_pins_exports_pins_bank2_test() ->
 
 initialize_pins_exports_pins_bank3_test() ->
   validate_pin_export("3", 5, "95").
+
+initalize_sets_pins_to_input_mode_test() ->
+  pin_library:initialize_pins([
+    #pin{bank = list_to_atom("gpio0"), bank_pin = 5},
+    #pin{bank = list_to_atom("gpio1"), bank_pin = 5}
+  ]),
+
+  ?assert(meck:called(file, write_file, [?PinsRootDir ++ "5/direction", "in"])),
+  ?assert(meck:called(file, write_file, [?PinsRootDir ++ "35/direction", "in"])).
 
 validate_pin_export(Bank, BankPin, SoftwarePin) ->
   Actual = pin_library:initialize_pins([#pin{bank = list_to_atom("gpio" ++ Bank), bank_pin = BankPin}]),
