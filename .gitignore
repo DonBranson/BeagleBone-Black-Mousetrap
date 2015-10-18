@@ -10,3 +10,5 @@
 *.script
 *.tar.gz
 /ebin
+.erlang.mk/
+deps/
