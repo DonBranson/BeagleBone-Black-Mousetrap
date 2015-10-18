@@ -1,0 +1,12 @@
+.project
+.settings/
+.idea
+*.beam
+*.dump
+*~
+*.swp
+*.iml
+*.boot
+*.script
+*.tar.gz
+/ebin
