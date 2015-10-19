@@ -32,8 +32,8 @@ initialize_pins_exports_pins_bank3_test() ->
 
 initalize_sets_pins_to_input_mode_test() ->
   pin_library:initialize_pins([
-    #pin{bank = list_to_atom("gpio0"), bank_pin = 5},
-    #pin{bank = list_to_atom("gpio1"), bank_pin = 5}
+    #pin{bank = gpio0, bank_pin = 5},
+    #pin{bank = gpio1, bank_pin = 5}
   ]),
 
   ?assert(meck:called(file, write_file, [?PinsRootDir ++ "5/direction", "in"])),
