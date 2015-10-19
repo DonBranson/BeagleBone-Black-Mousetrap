@@ -40,11 +40,44 @@ initalize_sets_pins_to_input_mode_test() ->
   ?assert(meck:called(file, write_file, [?PinsRootDir ++ "5/direction", "in"])),
   ?assert(meck:called(file, write_file, [?PinsRootDir ++ "35/direction", "in"])).
 
+read_pin_state_converts_one_to_open_test() ->
+  pin_read_setup(),
+  Actual = pin_library:read_pin_state(#pin{bank=gpio0, bank_pin=5}),
+  ?assertEqual(open, Actual).
+
+read_pin_state_converts_non_one_to_close_test() ->
+  pin_read_setup(),
+  Actual = pin_library:read_pin_state(#pin{bank=gpio1, bank_pin=5}),
+  ?assertEqual(closed, Actual).
+
+read_pin_state_closes_file_test() ->
+  pin_read_setup(),
+  pin_library:read_pin_state(#pin{bank=gpio0, bank_pin=5}),
+  ?assert(meck:called(file, close, [iodevice1])).
+
 validate_pin_export(Bank, BankPin, SoftwarePin) ->
+  meck:reset(file),
   Actual = pin_library:initialize_pins([#pin{bank = list_to_atom("gpio" ++ Bank), bank_pin = BankPin}]),
 
   ?assertEqual(ok, Actual),
   ?assert(meck:called(file, write_file, [?ExportFile, SoftwarePin])).
+
+pin_read_setup() ->
+  meck:reset(file),
+  meck:expect(file, open,
+    fun(ValueFile, [read, raw]) ->
+      case ValueFile of
+        ?PinsRootDir ++ "5/value" -> {ok, iodevice1};
+        _ -> {ok, iodevice2}
+      end
+    end),
+  meck:expect(file, read,
+    fun(IoDevice, 1) ->
+      case IoDevice of
+        iodevice1 -> {ok, "1"};
+        _ -> {ok, "0"}
+      end
+    end).
 
 fixture_teardown_test() ->
   meck:unload().
