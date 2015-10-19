@@ -31,6 +31,7 @@ initialize_pins_exports_pins_bank3_test() ->
   validate_pin_export("3", 5, "95").
 
 initalize_sets_pins_to_input_mode_test() ->
+  meck:reset(file),
   pin_library:initialize_pins([
     #pin{bank = gpio0, bank_pin = 5},
     #pin{bank = gpio1, bank_pin = 5}

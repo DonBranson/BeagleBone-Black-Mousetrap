@@ -4,9 +4,10 @@
 -export([initialize_pins/1]).
 
 initialize_pins([]) -> ok;
-initialize_pins([#pin{} = Pin|_T]) ->
+initialize_pins([#pin{} = Pin|T]) ->
   export_pin(Pin),
-  set_pin_for_input(Pin).
+  set_pin_for_input(Pin),
+  initialize_pins(T).
 
 export_pin(Pin) ->
   {ok, ExportFile} = application:get_env(mousetrap, pins_export_file),
