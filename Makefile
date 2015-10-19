@@ -1,5 +1,8 @@
 PROJECT = mousetrap
-DEPS = meck
+TEST_DEPS = meck
+DEPS = slacker
+dep_slacker = git git@github.com:julienXX/slacker.git master
+
 include erlang.mk
 
 run: clean tests
