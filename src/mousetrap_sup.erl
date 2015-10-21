@@ -16,6 +16,6 @@ init([]) ->
     [] ->
       {error, no_pins_to_watch};
     _ ->
-      MousetrapServer = {mousetrap_server, {mousetrap_server, start_link, []}, permanent, brutal_kill, worker, a},
+      MousetrapServer = {mousetrap_server, {mousetrap_server, start_link, []}, permanent, brutal_kill, worker, [mousetrap_server]},
       {ok, {{one_for_one, _MaxRestart = 1, _MaxTime = 1}, [MousetrapServer | a]}}
   end.

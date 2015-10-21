@@ -55,6 +55,11 @@ init_declares_the_mousetrap_server_is_a_worker_test() ->
   {_, {{_, _, _}, [{_, {_, _, []}, _, _, Type, _} | _ServerSpecs]}} = mousetrap_sup:init([]),
   ?assertEqual(worker, Type).
 
+init_declares_the_mousetrap_dependencies_test() ->
+  make_pin_list(),
+  {_, {{_, _, _}, [{_, {_, _, []}, _, _, _, Dependencies} | _ServerSpecs]}} = mousetrap_sup:init([]),
+  ?assertEqual([mousetrap_server], Dependencies).
+
 fixture_teardown_test() ->
   meck:unload().
 
