@@ -8,15 +8,15 @@ fixture_startup_test() ->
   ok.
 
 init_returns_ok_test() ->
-  {Actual, _, _} = mousetrap_sup:init([]),
+  {Actual, {_, _}} = mousetrap_sup:init([]),
   ?assertEqual(ok, Actual).
 
 init_sets_restart_strategy_test() ->
-  {_, {Actual, _, _}, _} = mousetrap_sup:init([]),
+  {_, {{Actual, _, _}, _}} = mousetrap_sup:init([]),
   ?assertEqual(one_for_one, Actual).
 
 init_sets_restart_parameters_test() ->
-  {_, {_, MaxRestart, MaxTime}, _} = mousetrap_sup:init([]),
+  {_, {{_, MaxRestart, MaxTime}, _}} = mousetrap_sup:init([]),
   ?assertEqual(1, MaxRestart),
   ?assertEqual(1, MaxTime).
 
@@ -27,7 +27,12 @@ init_fails_if_no_pins_to_watch_test() ->
 
 init_returns_a_list_of_pin_server_specs_test() ->
   make_pin_list(),
-  {_, {_, _, _}, _ServerSpecs = []} = mousetrap_sup:init([]).
+  {_, {{_, _, _}, [_M|_P]}} = mousetrap_sup:init([]).
+
+init_returns_mousetrap_server_spec_first_test() ->
+  make_pin_list(),
+  {_, {{_, _, _}, [{MousetrapServerTag, _, _, _, _} | _ServerSpecs]}} = mousetrap_sup:init([]),
+  ?assertEqual(mousetrap_server, MousetrapServerTag).
 
 fixture_teardown_test() ->
   meck:unload().
