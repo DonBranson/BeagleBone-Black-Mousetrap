@@ -9,4 +9,5 @@ start(_Type, _Args) ->
 	mousetrap_sup:start_link().
 
 stop(_State) ->
+  mousetrap_sup:stop(),
 	ok.
