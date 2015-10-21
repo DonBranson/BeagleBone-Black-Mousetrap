@@ -34,6 +34,12 @@ init_returns_mousetrap_server_spec_first_test() ->
   {_, {{_, _, _}, [{MousetrapServerTag, _, _, _, _} | _ServerSpecs]}} = mousetrap_sup:init([]),
   ?assertEqual(mousetrap_server, MousetrapServerTag).
 
+init_specifies_the_mousetrap_server_start_fucntion_test() ->
+  make_pin_list(),
+  {_, {{_, _, _}, [{_, {MouseTrapServerModule, MouseTrapServerStartFunction, []}, _, _, _} | _ServerSpecs]}} = mousetrap_sup:init([]),
+  ?assertEqual(mousetrap_server, MouseTrapServerModule),
+  ?assertEqual(start_link, MouseTrapServerStartFunction).
+
 fixture_teardown_test() ->
   meck:unload().
 
