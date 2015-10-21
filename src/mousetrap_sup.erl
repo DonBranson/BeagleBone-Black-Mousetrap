@@ -16,5 +16,5 @@ init([]) ->
     [] ->
       {error, no_pins_to_watch};
     _ ->
-      {ok, {one_for_one, _MaxRestart = 1, _MaxTime = 1}}
+      {ok, {one_for_one, _MaxRestart = 1, _MaxTime = 1}, []}
   end.
