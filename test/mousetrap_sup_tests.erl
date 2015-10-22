@@ -107,6 +107,17 @@ validate_shutdown_strategy([PinServer | PinServers]) ->
   ?assertEqual(brutal_kill, ActualShutdownStrategy),
   validate_shutdown_strategy(PinServers).
 
+init_declares_the_pin_server_isworker_test() ->
+  make_pin_list(),
+  {_, {{_, _, _}, [_ | PinServers]}} = mousetrap_sup:init([]),
+  validate_isworker(PinServers).
+
+validate_isworker([]) -> ok;
+validate_isworker([PinServer | PinServers]) ->
+  {_, _, _, _, ActualType, _} = PinServer,
+  ?assertEqual(worker, ActualType),
+  validate_isworker(PinServers).
+
 fixture_teardown_test() ->
   meck:unload().
 

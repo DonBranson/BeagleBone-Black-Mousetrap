@@ -29,7 +29,7 @@ build_list_of_pinserver_specs([], PinServers) -> PinServers;
 build_list_of_pinserver_specs([Pin|T], PinServers) ->
   {Bank, BankPin, _Description} = Pin,
   PinServerId = make_id(pin_server, #pin{bank = Bank, bank_pin = BankPin}),
-  PinChild = {PinServerId, {pin_server, start_link, []}, permanent, brutal_kill, a, []},
+  PinChild = {PinServerId, {pin_server, start_link, []}, permanent, brutal_kill, worker, []},
   build_list_of_pinserver_specs(T, [PinChild | PinServers]).
 
 make_id(Atom, Pin) -> list_to_atom(atom_to_list(Atom) ++ "_" ++ get_software_pin(Pin)).
