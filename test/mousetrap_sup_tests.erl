@@ -85,6 +85,17 @@ validate_start_function([PinServer | PinServers]) ->
   ?assertEqual([], ActualArgs),
   validate_start_function(PinServers).
 
+init_declares_the_pin_server_restart_strategy_test() ->
+  make_pin_list(),
+  {_, {{_, _, _}, [_ | PinServers]}} = mousetrap_sup:init([]),
+  validate_restart_strategy(PinServers).
+
+validate_restart_strategy([]) -> ok;
+validate_restart_strategy([PinServer | PinServers]) ->
+  {_, _, ActualRestartStrategy, _, _, _} = PinServer,
+  ?assertEqual(permanent, ActualRestartStrategy),
+  validate_restart_strategy(PinServers).
+
 fixture_teardown_test() ->
   meck:unload().
 
