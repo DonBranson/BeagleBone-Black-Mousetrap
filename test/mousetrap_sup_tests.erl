@@ -129,6 +129,13 @@ validate_dependencies([PinServer | PinServers]) ->
   ?assertEqual([pin_server, pin_library], ActualDependencies),
   validate_dependencies(PinServers).
 
+%% stop_invokes_exit_test() ->
+%%   meck:new(erlang, [unstick, passthrough]),
+%%   meck:expect(erlang, whereis, 1, a_pid),
+%%   meck:expect(erlang, exit, 2, true),
+%%   mousetrap_sup:stop(),
+%%   ?assert(meck:called(erlang, exit, [a_pid, kill])).
+
 fixture_teardown_test() ->
   meck:unload().
 

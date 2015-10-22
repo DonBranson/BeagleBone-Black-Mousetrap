@@ -5,14 +5,13 @@
 
 -import(pin_library, [get_software_pin/1]).
 
--export([start_link/0, stop/0]).
--export([init/1]).
+-export([init/1, start_link/0, stop/0]).
 
 start_link() ->
 	supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 stop() ->
-  ok.
+  exit(whereis(mousetrap_sup), kill).
 
 init([]) ->
   {ok, Pins} = application:get_env(mousetrap, pins),
