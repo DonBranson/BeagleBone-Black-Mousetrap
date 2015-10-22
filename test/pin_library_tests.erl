@@ -22,13 +22,13 @@ initialize_pins_exports_bank0_pins_test() ->
   validate_pin_export("0", 5, "5").
 
 initialize_pins_exports_pins_bank1_test() ->
-  validate_pin_export("1", 5, "35").
+  validate_pin_export("1", 5, "37").
 
 initialize_pins_exports_pins_bank2_test() ->
-  validate_pin_export("2", 5, "65").
+  validate_pin_export("2", 5, "69").
 
 initialize_pins_exports_pins_bank3_test() ->
-  validate_pin_export("3", 5, "95").
+  validate_pin_export("3", 5, "101").
 
 initalize_sets_pins_to_input_mode_test() ->
   meck:reset(file),
@@ -38,7 +38,7 @@ initalize_sets_pins_to_input_mode_test() ->
   ]),
 
   ?assert(meck:called(file, write_file, [?PinsRootDir ++ "5/direction", "in"])),
-  ?assert(meck:called(file, write_file, [?PinsRootDir ++ "35/direction", "in"])).
+  ?assert(meck:called(file, write_file, [?PinsRootDir ++ "37/direction", "in"])).
 
 read_pin_state_converts_one_to_open_test() ->
   pin_read_setup(),

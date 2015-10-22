@@ -1,7 +1,7 @@
 -module(pin_library).
 -include_lib("pin_record.hrl").
 
--export([initialize_pins/1, read_pin_state/1]).
+-export([initialize_pins/1, read_pin_state/1, get_software_pin/1]).
 
 initialize_pins([]) -> ok;
 initialize_pins([#pin{} = Pin|T]) ->
@@ -27,8 +27,8 @@ read_pin_state(#pin{} = Pin) ->
 transform_state({ok, "1"}) -> open;
 transform_state({ok, _}) -> closed.
 
-get_software_pin(#pin{bank=gpio0, bank_pin=Pin}) -> get_software_pin(0 + Pin);
-get_software_pin(#pin{bank=gpio1, bank_pin=Pin}) -> get_software_pin(30 + Pin);
-get_software_pin(#pin{bank=gpio2, bank_pin=Pin}) -> get_software_pin(60 + Pin);
-get_software_pin(#pin{bank=gpio3, bank_pin=Pin}) -> get_software_pin(90 + Pin);
+get_software_pin(#pin{bank=gpio0, bank_pin=Pin}) -> get_software_pin(0 * 32 + Pin);
+get_software_pin(#pin{bank=gpio1, bank_pin=Pin}) -> get_software_pin(1 * 32 + Pin);
+get_software_pin(#pin{bank=gpio2, bank_pin=Pin}) -> get_software_pin(2 * 32 + Pin);
+get_software_pin(#pin{bank=gpio3, bank_pin=Pin}) -> get_software_pin(3 * 32 + Pin);
 get_software_pin(SoftwarePin) -> integer_to_list(SoftwarePin).

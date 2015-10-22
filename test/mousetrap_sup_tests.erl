@@ -60,6 +60,18 @@ init_declares_the_mousetrap_dependencies_test() ->
   {_, {{_, _, _}, [{_, {_, _, []}, _, _, _, Dependencies} | _ServerSpecs]}} = mousetrap_sup:init([]),
   ?assertEqual([mousetrap_server], Dependencies).
 
+init_declares_a_pin_server_for_each_watched_pin_test() ->
+  make_pin_list(),
+  {_, {{_, _, _}, [_ | PinServers]}} = mousetrap_sup:init([]),
+  PinserverTags = [pin_server_5, pin_server_48, pin_server_31, pin_server_30],
+  validate_tags(PinserverTags, PinServers).
+
+validate_tags([], []) -> ok;
+validate_tags([ExpectedPinServerTag | PinServerTags], [PinServer | PinServers]) ->
+  {ActualTag, _, _, _, _, _} = PinServer,
+  ?assertEqual(ExpectedPinServerTag, ActualTag),
+  validate_tags(PinServerTags, PinServers).
+
 fixture_teardown_test() ->
   meck:unload().
 
@@ -68,7 +80,7 @@ make_pin_list() ->
     [
       {gpio0, 30, "1 (over workshop door)"},
       {gpio0, 31, "2 (by basement freezer)"},
-      {gpio0, 48, "3 (in the kitchen pantry)"},
+      {gpio1, 16, "3 (in the kitchen pantry)"},
       {gpio0, 5, "4 (Not yet wired)"}
     ]
   ).
