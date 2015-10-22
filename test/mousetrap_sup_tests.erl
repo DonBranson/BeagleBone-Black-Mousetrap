@@ -66,6 +66,12 @@ init_declares_a_pin_server_for_each_watched_pin_test() ->
   PinserverTags = [pin_server_5, pin_server_48, pin_server_31, pin_server_30],
   validate_tags(PinserverTags, PinServers).
 
+validate_tags([], []) -> ok;
+validate_tags([ExpectedPinServerTag | PinServerTags], [PinServer | PinServers]) ->
+  {ActualTag, _, _, _, _, _} = PinServer,
+  ?assertEqual(ExpectedPinServerTag, ActualTag),
+  validate_tags(PinServerTags, PinServers).
+
 init_specifies_the_pin_server_start_function_test() ->
   make_pin_list(),
   {_, {{_, _, _}, [_ | PinServers]}} = mousetrap_sup:init([]),
@@ -78,12 +84,6 @@ validate_start_function([PinServer | PinServers]) ->
   ?assertEqual(start_link, ActualStartFunction),
   ?assertEqual([], ActualArgs),
   validate_start_function(PinServers).
-
-validate_tags([], []) -> ok;
-validate_tags([ExpectedPinServerTag | PinServerTags], [PinServer | PinServers]) ->
-  {ActualTag, _, _, _, _, _} = PinServer,
-  ?assertEqual(ExpectedPinServerTag, ActualTag),
-  validate_tags(PinServerTags, PinServers).
 
 fixture_teardown_test() ->
   meck:unload().
