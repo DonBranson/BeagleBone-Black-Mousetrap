@@ -118,6 +118,17 @@ validate_isworker([PinServer | PinServers]) ->
   ?assertEqual(worker, ActualType),
   validate_isworker(PinServers).
 
+init_declares_the_pin_server_dependencies_test() ->
+  make_pin_list(),
+  {_, {{_, _, _}, [_ | PinServers]}} = mousetrap_sup:init([]),
+  validate_dependencies(PinServers).
+
+validate_dependencies([]) -> ok;
+validate_dependencies([PinServer | PinServers]) ->
+  {_, _, _, _, _, ActualDependencies} = PinServer,
+  ?assertEqual([pin_server, pin_library], ActualDependencies),
+  validate_dependencies(PinServers).
+
 fixture_teardown_test() ->
   meck:unload().
 
