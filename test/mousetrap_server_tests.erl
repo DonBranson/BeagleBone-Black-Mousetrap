@@ -4,7 +4,6 @@
 -include_lib("../src/pin_record.hrl").
 
 fixture_startup_test() ->
-  application:set_env(mousetrap, slack_token, "test_token"),
   meck:expect(notification_library, notify, 1, {ok, 200, [long_list]}).
 
 init_returns_ok_test() ->
