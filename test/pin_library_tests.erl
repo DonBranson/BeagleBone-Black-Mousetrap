@@ -1,7 +1,7 @@
 -module(pin_library_tests).
 
--include_lib("../src/pin_record.hrl").
 -include_lib("eunit/include/eunit.hrl").
+-include_lib("../src/pin_record.hrl").
 
 -define(ExportFile, "export_file").
 -define(PinsRootDir, "pins_root").
