@@ -1,6 +1,7 @@
 -module(mousetrap_sup_tests).
 
 -include_lib("eunit/include/eunit.hrl").
+-include_lib("../src/pin_record.hrl").
 
 fixture_startup_test() ->
   application:set_env(mousetrap, quiet_minutes, 5),
@@ -72,6 +73,27 @@ validate_tags([ExpectedPinServerTag | PinServerTags], [PinServer | PinServers]) 
   ?assertEqual(ExpectedPinServerTag, ActualTag),
   validate_tags(PinServerTags, PinServers).
 
+init_sets_parameters_on_pin_server_start_test() ->
+  make_pin_list(),
+  {_, {{_, _, _}, [_ | PinServers]}} = mousetrap_sup:init([]),
+  PinserverTags = [pin_server_5, pin_server_48, pin_server_31, pin_server_30],
+  ExpectedPins = [
+    #pin{bank=gpio0, bank_pin = 5, description="4 (Not yet wired)"},
+    #pin{bank=gpio1, bank_pin = 16, description="3 (in the kitchen pantry)"},
+    #pin{bank=gpio0, bank_pin = 31, description="2 (by basement freezer)"},
+    #pin{bank=gpio0, bank_pin = 30, description="1 (over workshop door)"}
+  ],
+  validate_pin_server_start_parameters(PinserverTags, ExpectedPins, PinServers).
+
+validate_pin_server_start_parameters([], [], []) -> ok;
+validate_pin_server_start_parameters([ExpectedPinServerTag | PinServerTags], [ExpectedPin | Pins], [PinServer | PinServers]) ->
+  {_, {_, _, [ActualPinServerId, ActualPin, ActualQuietSeconds, ActualClient]}, _, _, _, _} = PinServer,
+  ?assertEqual(ExpectedPinServerTag, ActualPinServerId),
+  ?assertEqual(ExpectedPin, ActualPin),
+  ?assertEqual(60 * 5, ActualQuietSeconds),
+  ?assertEqual(mousetrap_server, ActualClient),
+  validate_pin_server_start_parameters(PinServerTags, Pins, PinServers).
+
 init_specifies_the_pin_server_start_function_test() ->
   make_pin_list(),
   {_, {{_, _, _}, [_ | PinServers]}} = mousetrap_sup:init([]),
@@ -79,10 +101,9 @@ init_specifies_the_pin_server_start_function_test() ->
 
 validate_start_function([]) -> ok;
 validate_start_function([PinServer | PinServers]) ->
-  {_, {ActualModule, ActualStartFunction, ActualArgs}, _, _, _, _} = PinServer,
+  {_, {ActualModule, ActualStartFunction, _}, _, _, _, _} = PinServer,
   ?assertEqual(pin_server, ActualModule),
   ?assertEqual(start_link, ActualStartFunction),
-  ?assertEqual([], ActualArgs),
   validate_start_function(PinServers).
 
 init_declares_the_pin_server_restart_strategy_test() ->
