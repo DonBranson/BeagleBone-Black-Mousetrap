@@ -25,11 +25,11 @@ format_message(Str, Pin) ->
 terminate(_Reason, _State) ->
   ok.
 
-handle_call(Request, From, State) ->
+handle_call(_Request, _From, _State) ->
   erlang:error(not_implemented).
 
-handle_info(Info, State) ->
+handle_info(_Info, _State) ->
   erlang:error(not_implemented).
 
-code_change(OldVsn, State, Extra) ->
+code_change(_OldVsn, _State, _Extra) ->
   erlang:error(not_implemented).
