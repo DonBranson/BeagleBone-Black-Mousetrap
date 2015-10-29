@@ -29,7 +29,10 @@ handle_cast(check_pin, [Pin, QuietSeconds, Client, _, 1]) ->
 handle_cast(check_pin, [Pin, QuietSeconds, Client, PinState, 0]) ->
   NewPinState = read_pin_state(Pin),
   NewQuietSecondsLeft = compare_pin_states(Client, Pin, PinState, NewPinState, QuietSeconds),
-  {noreply, [Pin, QuietSeconds, Client, NewPinState, NewQuietSecondsLeft]}.
+  {noreply, [Pin, QuietSeconds, Client, NewPinState, NewQuietSecondsLeft]};
+
+%In a quiet period, decrement count
+handle_cast(check_pin, [Pin, QuietSeconds, Client, PinState, QuietSecondsLeft]) -> {noreply, [Pin, QuietSeconds, Client, PinState, QuietSecondsLeft - 1]}.
 
 terminate(_Reason, _State) ->
   ok.
@@ -49,6 +52,7 @@ compare_pin_states(Client, Pin, open, closed = NewState, QuietSeconds) -> handle
 compare_pin_states(Client, Pin, closed, open = NewState, QuietSeconds) -> handle_transition(Client, Pin, NewState), QuietSeconds.
 
 handle_transition(Client, Pin, NewState) ->
+  notification_library:notify(format_message("Pin ~p is now ~p, notifying ~p", [Pin, NewState, Client])),
   gen_server:cast(Client, {NewState, Pin}).
 
 format_message(Str, Args) ->
