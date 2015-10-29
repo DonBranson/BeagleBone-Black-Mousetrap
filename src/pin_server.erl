@@ -4,12 +4,13 @@
 -behaviour(gen_server).
 
 -import(pin_library, [read_pin_state/1, initialize_pins/1]).
--export([start_link/0, init/1, terminate/2, handle_call/3, handle_info/2, code_change/3, handle_cast/2]).
+-export([start_link/4, init/1, terminate/2, handle_call/3, handle_info/2, code_change/3, handle_cast/2]).
 
-start_link() ->
-  gen_server:start_link(?MODULE, [], []).
+start_link(PinServerId, Pin, QuietSeconds, Client) ->
+  gen_server:start_link(?MODULE, [PinServerId, Pin, QuietSeconds, Client], []).
 
-init(_Arguments) ->
+init([PinServerId, Pin, QuietSeconds, Client]) ->
+  gen_server:cast(PinServerId, {start, PinServerId, Pin, QuietSeconds, Client}),
   {ok, running}.
 
 % Check the pin state every second. When there's an event, quiesce for QuietSeconds.
@@ -22,7 +23,13 @@ handle_cast({start, PinServerId, Pin, QuietSeconds, Client}, _State) ->
 
 %Quiet period ending, re-read pin state.
 handle_cast(check_pin, [Pin, QuietSeconds, Client, _, 1]) ->
-  {noreply, [Pin, QuietSeconds, Client, read_pin_state(Pin), 0]}.
+  {noreply, [Pin, QuietSeconds, Client, read_pin_state(Pin), 0]};
+
+%Not in a quiet period, check for state changes
+handle_cast(check_pin, [Pin, QuietSeconds, Client, PinState, 0]) ->
+  NewPinState = read_pin_state(Pin),
+  NewQuietSecondsLeft = compare_pin_states(Client, Pin, PinState, NewPinState, QuietSeconds),
+  {noreply, [Pin, QuietSeconds, Client, NewPinState, NewQuietSecondsLeft]}.
 
 terminate(_Reason, _State) ->
   ok.
@@ -35,6 +42,14 @@ handle_info(_Info, State) ->
 
 code_change(_OldVsn, State, _Extra) ->
   {ok, State}.
+
+%If there's a state change, set the countdown to QuietSeconds
+compare_pin_states(_, _, PinState, PinState, _) -> 0;
+compare_pin_states(Client, Pin, open, closed = NewState, QuietSeconds) -> handle_transition(Client, Pin, NewState), QuietSeconds;
+compare_pin_states(Client, Pin, closed, open = NewState, QuietSeconds) -> handle_transition(Client, Pin, NewState), QuietSeconds.
+
+handle_transition(Client, Pin, NewState) ->
+  gen_server:cast(Client, {NewState, Pin}).
 
 format_message(Str, Args) ->
   lists:flatten(io_lib:format(Str, Args)).
