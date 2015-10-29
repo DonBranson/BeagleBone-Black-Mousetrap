@@ -7,7 +7,7 @@ fixture_startup_test() ->
   application:set_env(mousetrap, pin_check_interval_seconds, 1),
   meck:new([timer], [unstick]),
   meck:expect(pin_library, initialize_pins, 1, ok),
-  meck:expect(pin_library, read_pin_state, 1, open_state),
+  meck:expect(pin_library, read_pin_state, 1, open_test),
   meck:expect(notification_library, notify, 1, {ok, 200, [long_list]}),
   meck:expect(timer, apply_interval, 4, {ok, timer_ref}).
 
@@ -34,7 +34,12 @@ handle_cast_starts_timer_test() ->
 handle_cast_start_returns_state_test() ->
   Pin = #pin{bank = gpio0, bank_pin = 5},
   Actual = pin_server:handle_cast({start, pin_server_5, Pin, 63, pin_server_tests}, []),
-  ?assertEqual({noreply, [Pin, 63, pin_server_tests, open_state, 0]}, Actual).
+  ?assertEqual({noreply, [Pin, 63, pin_server_tests, open_test, 0]}, Actual).
+
+handle_cast_rereads_pin_state_at_end_of_quiescent_period_test() ->
+  Pin = #pin{bank = gpio0, bank_pin = 5},
+  Actual = pin_server:handle_cast(check_pin, [Pin, 63, pin_server_tests, open, 1]),
+  ?assertEqual({noreply, [Pin, 63, pin_server_tests, open_test, 0]}, Actual).
 
 terminate_returns_ok_test() ->
   Actual = pin_server:terminate(reason, state),

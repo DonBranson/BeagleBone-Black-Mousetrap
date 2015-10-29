@@ -3,6 +3,7 @@
 
 -behaviour(gen_server).
 
+-import(pin_library, [read_pin_state/1, initialize_pins/1]).
 -export([start_link/0, init/1, terminate/2, handle_call/3, handle_info/2, code_change/3, handle_cast/2]).
 
 start_link() ->
@@ -11,12 +12,17 @@ start_link() ->
 init(_Arguments) ->
   {ok, running}.
 
+% Check the pin state every second. When there's an event, quiesce for QuietSeconds.
 handle_cast({start, PinServerId, Pin, QuietSeconds, Client}, _State) ->
   {ok, PinCheckIntervalInSeconds} = application:get_env(mousetrap, pin_check_interval_seconds),
   notification_library:notify(format_message("Start ~p watching pin ~p and notifying ~p", [PinServerId, Pin, Client])),
-  pin_library:initialize_pins([Pin]),
+  initialize_pins([Pin]),
   timer:apply_interval(PinCheckIntervalInSeconds * 1000, ?MODULE, check_pin, [PinServerId]),
-  {noreply, [Pin, QuietSeconds, Client, pin_library:read_pin_state(Pin), 0]}.
+  {noreply, [Pin, QuietSeconds, Client, read_pin_state(Pin), 0]};
+
+%Quiet period ending, re-read pin state.
+handle_cast(check_pin, [Pin, QuietSeconds, Client, _, 1]) ->
+  {noreply, [Pin, QuietSeconds, Client, read_pin_state(Pin), 0]}.
 
 terminate(_Reason, _State) ->
   ok.
