@@ -11,12 +11,12 @@ start_link() ->
 init(_Arguments) ->
   {ok, running}.
 
-handle_cast({start, PinServerId, Pin, _QuietSeconds, Client}, State) ->
+handle_cast({start, PinServerId, Pin, QuietSeconds, Client}, _State) ->
   {ok, PinCheckIntervalInSeconds} = application:get_env(mousetrap, pin_check_interval_seconds),
   notification_library:notify(format_message("Start ~p watching pin ~p and notifying ~p", [PinServerId, Pin, Client])),
   pin_library:initialize_pins([Pin]),
   timer:apply_interval(PinCheckIntervalInSeconds * 1000, ?MODULE, check_pin, [PinServerId]),
-  {noreply, State}.
+  {noreply, [Pin, QuietSeconds, Client, pin_library:read_pin_state(Pin), 0]}.
 
 terminate(_Reason, _State) ->
   ok.
