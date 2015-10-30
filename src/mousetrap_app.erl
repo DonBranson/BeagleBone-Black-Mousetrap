@@ -5,6 +5,8 @@
 -export([stop/1]).
 
 start(_Type, _Args) ->
+	inets:start(),
+	ssl:start(),
 	notification_library:notify("Mousetrap starting"),
 	mousetrap_sup:start_link().
 

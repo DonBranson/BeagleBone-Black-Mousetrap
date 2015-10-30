@@ -4,8 +4,6 @@ PROJECT_VERSION = 1.0.0
 PROJECT_REGISTERED = mousetrap
 
 TEST_DEPS = meck
-DEPS = slacker
-dep_slacker = git git@github.com:julienXX/slacker.git master
 
 include erlang.mk
 

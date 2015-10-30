@@ -4,10 +4,13 @@
 
 fixture_startup_test() ->
   application:set_env(mousetrap, slack_token, "test_token"),
-  meck:new(slacker, [unstick]),
-  meck:expect(slacker_chat, post_message, 4, {ok, [long_list]}).
+  application:set_env(mousetrap, slack_user, "mousetrap"),
+  application:set_env(mousetrap, slack_channel, "#moustrap_test"),
+  meck:expect(http_uri, encode, 1, "encoded_string"),
+  meck:expect(httpc, request, 1, ok).
 
 notify_forwards_to_slacker_test() ->
   TestMessage = "Test Message",
   notification_library:notify(TestMessage),
-  ?assert(meck:called(slacker_chat, post_message, [<<"test_token">>, <<"#mousetrap">>, <<"Test Message">>, <<"mousetrap">>])).
+  ?assert(meck:called(httpc, request,
+    ["https://slack.com/api/chat.postMessage?token=encoded_string&channel=encoded_string&username=encoded_string&text=encoded_string"])).
