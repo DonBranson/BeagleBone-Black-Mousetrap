@@ -9,11 +9,11 @@ dep_slacker = git git@github.com:julienXX/slacker.git master
 
 include erlang.mk
 
-run:
+run-dev:
 	erl -pa ebin deps/*/ebin -eval "application:ensure_all_started(mousetrap, permanent)." \
 		-setcookie mousetrap \
 		-sname mousetrap \
-		-config rel/files/sys.config
+		-config config/sys.config
 
 observe:
 	erl -sname observer -hidden -setcookie mousetrap -run observer
