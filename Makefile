@@ -7,11 +7,5 @@ TEST_DEPS = meck
 
 include erlang.mk
 
-run-dev:
-	erl -pa ebin deps/*/ebin -eval "application:ensure_all_started(mousetrap, permanent)." \
-		-setcookie mousetrap \
-		-sname mousetrap \
-		-config config/sys.config
-
 observe:
 	erl -sname observer -hidden -setcookie mousetrap -run observer
