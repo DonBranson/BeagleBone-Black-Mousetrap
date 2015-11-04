@@ -4,10 +4,10 @@
 -behaviour(gen_server).
 
 -import(pin_library, [read_pin_state/1, initialize_pins/1]).
--export([start_link/4, init/1, terminate/2, handle_call/3, handle_info/2, code_change/3, handle_cast/2]).
+-export([start_link/4, init/1, terminate/2, handle_call/3, handle_info/2, code_change/3, handle_cast/2, check_pin/1]).
 
 start_link(PinServerId, Pin, QuietSeconds, Client) ->
-  gen_server:start_link(?MODULE, [PinServerId, Pin, QuietSeconds, Client], []).
+  gen_server:start_link({local, PinServerId}, ?MODULE, [PinServerId, Pin, QuietSeconds, Client], []).
 
 init([PinServerId, Pin, QuietSeconds, Client]) ->
   gen_server:cast(PinServerId, {start, PinServerId, Pin, QuietSeconds, Client}),
@@ -45,6 +45,8 @@ handle_info(_Info, State) ->
 
 code_change(_OldVsn, State, _Extra) ->
   {ok, State}.
+
+check_pin(PinServerId) -> gen_server:cast(PinServerId, check_pin).
 
 %If there's a state change, set the countdown to QuietSeconds
 compare_pin_states(_, _, PinState, PinState, _) -> 0;
