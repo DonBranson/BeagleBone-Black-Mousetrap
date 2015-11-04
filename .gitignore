@@ -16,3 +16,4 @@ mousetrap.d
 sys.config.prod
 _rel/
 relx
+gpio/

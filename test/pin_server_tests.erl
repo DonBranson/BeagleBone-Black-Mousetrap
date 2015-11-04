@@ -60,12 +60,6 @@ handle_cast_decrements_count_during_quiescent_period_test() ->
   Actual = pin_server:handle_cast(check_pin, [Pin, 63, pin_server_tests, open, 10]),
   ?assertEqual({noreply, [Pin, 63, pin_server_tests, open, 9]}, Actual).
 
-state_change_sends_notification_test() ->
-  meck:expect(pin_library, read_pin_state, 1, open),
-  Pin = #pin{bank = gpio0, bank_pin = 5},
-  pin_server:handle_cast(check_pin, [Pin, 63, pin_server_tests, closed, 0]),
-  ?assert(meck:called(notification_library, notify, ["Pin {pin,gpio0,5,undefined} is now open, notifying pin_server_tests"])).
-
 terminate_returns_ok_test() ->
   Actual = pin_server:terminate(reason, state),
   ?assertEqual(ok, Actual).

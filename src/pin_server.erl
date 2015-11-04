@@ -54,7 +54,6 @@ compare_pin_states(Client, Pin, open, closed = NewState, QuietSeconds) -> handle
 compare_pin_states(Client, Pin, closed, open = NewState, QuietSeconds) -> handle_transition(Client, Pin, NewState), QuietSeconds.
 
 handle_transition(Client, Pin, NewState) ->
-  notification_library:notify(format_message("Pin ~p is now ~p, notifying ~p", [Pin, NewState, Client])),
   gen_server:cast(Client, {NewState, Pin}).
 
 format_message(Str, Args) ->
