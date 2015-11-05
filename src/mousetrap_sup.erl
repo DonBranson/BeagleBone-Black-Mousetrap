@@ -27,10 +27,12 @@ init([]) ->
   end.
 
 build_list_of_pinserver_specs([], PinServers, _QuietSeconds) -> PinServers;
-build_list_of_pinserver_specs([Pin|T], PinServers, QuietSeconds) ->
-  {Bank, BankPin, Description} = Pin,
-  PinServerId = make_id(pin_server, #pin{bank = Bank, bank_pin = BankPin, description = Description}),
-  PinChild = {PinServerId, {pin_server, start_link, [PinServerId, (#pin{bank = Bank, bank_pin = BankPin, description = Description}), QuietSeconds, mousetrap_server]}, permanent, brutal_kill, worker, [pin_server, pin_library]},
+build_list_of_pinserver_specs([{Bank, BankPin, Description}|T], PinServers, QuietSeconds) ->
+  PinServerId = make_pin_server_id(pin_server, #pin{bank = Bank, bank_pin = BankPin, description = Description}),
+  PinChild = {PinServerId,
+    {pin_server, start_link, [PinServerId, (#pin{bank = Bank, bank_pin = BankPin, description = Description}), QuietSeconds, mousetrap_server]},
+    permanent, brutal_kill, worker, [pin_server, pin_library]
+  },
   build_list_of_pinserver_specs(T, [PinChild | PinServers], QuietSeconds).
 
-make_id(Atom, Pin) -> list_to_atom(atom_to_list(Atom) ++ "_" ++ get_software_pin(Pin)).
+make_pin_server_id(Atom, Pin) -> list_to_atom(atom_to_list(Atom) ++ "_" ++ get_software_pin(Pin)).
