@@ -5,8 +5,8 @@
 
 initialize_pins([]) -> ok;
 initialize_pins([#pin{} = Pin|T]) ->
-  export_pin(Pin),
-  set_pin_for_input(Pin),
+  ok = export_pin(Pin),
+  ok = set_pin_for_input(Pin),
   initialize_pins(T).
 
 export_pin(Pin) ->
@@ -21,7 +21,7 @@ read_pin_state(#pin{} = Pin) ->
   {ok, PinsRootDirectory} = application:get_env(mousetrap, pins_root_directory),
   {ok, IoDevice} = file:open(PinsRootDirectory ++ get_software_pin(Pin) ++ "/value", [read, raw]),
   State = transform_state(file:read(IoDevice, 1)),
-  file:close(IoDevice),
+  ok = file:close(IoDevice),
   State.
 
 transform_state({ok, "1"}) -> open;

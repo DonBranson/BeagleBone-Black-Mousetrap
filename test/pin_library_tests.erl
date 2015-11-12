@@ -10,7 +10,8 @@ fixture_startup_test() ->
   application:set_env(mousetrap, pins_export_file, ?ExportFile),
   application:set_env(mousetrap, pins_root_directory, ?PinsRootDir),
   meck:new(file, [unstick, passthrough]),
-  meck:expect(file, write_file, 2, ok).
+  meck:expect(file, write_file, 2, ok),
+  meck:expect(file, close, 1, ok).
 
 initialize_pins_exports_pins_empty_test() ->
   Actual = pin_library:initialize_pins([]),

@@ -18,7 +18,7 @@ handle_cast({start, PinServerId, Pin, QuietSeconds, Client}, _State) ->
   {ok, PinCheckIntervalInSeconds} = application:get_env(mousetrap, pin_check_interval_seconds),
   notification_library:notify(format_message("Start ~p watching pin ~p and notifying ~p", [PinServerId, Pin, Client])),
   initialize_pins([Pin]),
-  timer:apply_interval(PinCheckIntervalInSeconds * 1000, ?MODULE, check_pin, [PinServerId]),
+  {ok, _TimerRef} = timer:apply_interval(PinCheckIntervalInSeconds * 1000, ?MODULE, check_pin, [PinServerId]),
   {noreply, [Pin, QuietSeconds, Client, read_pin_state(Pin), 0]};
 
 %Quiet period ending, re-read pin state.

@@ -17,3 +17,4 @@ sys.config.prod
 _rel/
 relx
 gpio/
+.mousetrap.plt

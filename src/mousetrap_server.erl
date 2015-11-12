@@ -25,11 +25,6 @@ format_message(Str, Pin) ->
 terminate(_Reason, _State) ->
   ok.
 
-handle_call(_Request, _From, _State) ->
-  erlang:error(not_implemented).
-
-handle_info(_Info, _State) ->
-  erlang:error(not_implemented).
-
-code_change(_OldVsn, _State, _Extra) ->
-  erlang:error(not_implemented).
+handle_call(_Request, _From, _State) -> {noreply, ok}.
+handle_info(_Info, _State) -> {noreply, ok}.
+code_change(_OldVsn, _State, _Extra) -> {ok, ok}.
