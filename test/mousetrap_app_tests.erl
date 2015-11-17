@@ -22,5 +22,11 @@ stop_stops_mousetrap_supervisor_test() ->
   mousetrap_app:stop(state),
   ?assert(meck:called(mousetrap_sup, stop, [])).
 
+stop_sends_notification_test() ->
+  meck:reset(mousetrap_sup),
+  meck:expect(mousetrap_sup, stop, 0, {ok, pid}),
+  mousetrap_app:stop(state),
+  ?assert(meck:called(notification_library, notify, ["Mousetrap stopping"])).
+
 fixture_teardown_test() ->
   meck:unload().

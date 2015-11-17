@@ -1,0 +1,6 @@
+#!/bin/sh
+
+export HOME=/home/root
+export PATH=/usr/local/bin:/usr/bin:/bin
+. /home/root/erlangs/17.4/activate
+/home/root/mousetrap/bin/mousetrap $*

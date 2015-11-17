@@ -5,8 +5,8 @@
 
 initialize_pins([]) -> ok;
 initialize_pins([#pin{} = Pin|T]) ->
-  ok = export_pin(Pin),
-  ok = set_pin_for_input(Pin),
+  export_pin(Pin),
+  set_pin_for_input(Pin),
   initialize_pins(T).
 
 export_pin(Pin) ->

@@ -1,0 +1,15 @@
+[Unit]
+Description=Mousetrap service
+Requires=ntpd.service
+After=ntpd.service
+
+[Service]
+ExecStart=/home/root/runner foreground
+ExecStop=/home/root/runner stop
+SyslogIdentifier=mousetrap
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=60
+
+[Install]
+WantedBy=multi-user.target
