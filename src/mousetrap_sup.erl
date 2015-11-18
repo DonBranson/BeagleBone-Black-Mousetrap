@@ -2,9 +2,7 @@
 -behaviour(supervisor).
 
 -include_lib("pin_record.hrl").
-
 -import(pin_library, [get_software_pin/1]).
-
 -export([init/1, start_link/0, stop/0]).
 
 start_link() ->

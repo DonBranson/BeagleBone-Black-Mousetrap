@@ -1,8 +1,7 @@
 -module(mousetrap_app).
 -behaviour(application).
 
--export([start/2]).
--export([stop/1]).
+-export([start/2, stop/1]).
 
 start(_Type, _Args) ->
 	inets:start(),

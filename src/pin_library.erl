@@ -1,6 +1,6 @@
 -module(pin_library).
--include_lib("pin_record.hrl").
 
+-include_lib("pin_record.hrl").
 -export([initialize_pins/1, read_pin_state/1, get_software_pin/1]).
 
 initialize_pins([]) -> ok;

@@ -1,8 +1,7 @@
 -module(pin_server).
--include_lib("../src/pin_record.hrl").
-
 -behaviour(gen_server).
 
+-include_lib("../src/pin_record.hrl").
 -import(pin_library, [read_pin_state/1, initialize_pins/1]).
 -export([start_link/4, init/1, terminate/2, handle_call/3, handle_info/2, code_change/3, handle_cast/2, check_pin/1]).
 
