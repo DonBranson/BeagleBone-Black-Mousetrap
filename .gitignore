@@ -7,3 +7,4 @@ sys.config.prod
 mousetrap.d
 relx
 *.beam
+.mousetrap.plt
