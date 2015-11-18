@@ -23,7 +23,8 @@ start_link_delegates_test() ->
 
 handle_cast_sends_notification_test() ->
   fire_pin_serverhandle_cast(),
-  ?assert(meck:called(notification_library, notify, ["Start pin_server_5 watching pin {pin,gpio0,5,undefined} and notifying pin_server_tests"])).
+  ?assert(meck:called(notification_library, notify,
+    ["Start pin_server_5 watching pin {pin,gpio0,5,undefined} (now open_test) and notifying pin_server_tests"])).
 
 handle_cast_calls_initialize_pins_test() ->
   Pin = fire_pin_serverhandle_cast(),
