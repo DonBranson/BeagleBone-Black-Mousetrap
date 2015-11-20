@@ -11,10 +11,10 @@ init(_Arguments) ->
   {ok, running}.
 
 handle_cast({open, Pin}, State) ->
-  notification_library:notify(format_message("Mousetrap '~s' has caught a mouse.", Pin)),
+  notification_library:notify(format_message("Mousetrap ~s has caught a mouse.", Pin)),
   {noreply, State};
 handle_cast({closed, Pin}, State) ->
-  notification_library:notify(format_message("Mousetrap '~s' has been reset.", Pin)),
+  notification_library:notify(format_message("Mousetrap ~s has been reset.", Pin)),
   {noreply, State}.
 
 format_message(Str, Pin) ->
