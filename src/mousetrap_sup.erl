@@ -14,6 +14,7 @@ stop() ->
 init([]) ->
   {ok, Pins} = application:get_env(mousetrap, pins),
   {ok, QuietMinutes} = application:get_env(mousetrap, quiet_minutes),
+  notification_library:notify(lists:flatten(io_lib:format("Quiet period set to ~p minutes.", [QuietMinutes]))),
   QuietSeconds = QuietMinutes * 60,
   case Pins of
     [] ->

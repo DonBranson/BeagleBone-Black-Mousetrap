@@ -5,12 +5,17 @@
 
 fixture_startup_test() ->
   application:set_env(mousetrap, quiet_minutes, 5),
+  meck:expect(notification_library, notify, 1, {ok, 200, [long_list]}),
   make_pin_list(),
   ok.
 
 init_returns_ok_test() ->
   {Actual, {_, _}} = mousetrap_sup:init([]),
   ?assertEqual(ok, Actual).
+
+init_sends_notification_test() ->
+  mousetrap_sup:init([]),
+  ?assert(meck:called(notification_library, notify, ["Quiet period set to 5 minutes."])).
 
 init_sets_restart_strategy_test() ->
   {_, {{Actual, _, _}, _}} = mousetrap_sup:init([]),
