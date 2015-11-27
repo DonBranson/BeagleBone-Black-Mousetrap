@@ -8,3 +8,4 @@ mousetrap.d
 relx
 *.beam
 .mousetrap.plt
+erl_crash.dump
