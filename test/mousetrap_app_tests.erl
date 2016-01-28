@@ -10,7 +10,7 @@ fixture_startup_test() ->
 
 start_sends_notification_test() ->
   mousetrap_app:start("", ""),
-  ?assert(meck:called(notification_library, notify, ["Mousetrap starting"])).
+  ?assert(meck:called(notification_library, notify, ["@channel Mousetrap starting"])).
 
 start_starts_mousetrap_supervisor_test() ->
   meck:reset(mousetrap_sup),
@@ -26,7 +26,7 @@ stop_sends_notification_test() ->
   meck:reset(mousetrap_sup),
   meck:expect(mousetrap_sup, stop, 0, {ok, pid}),
   mousetrap_app:stop(state),
-  ?assert(meck:called(notification_library, notify, ["Mousetrap stopping"])).
+  ?assert(meck:called(notification_library, notify, ["@here Mousetrap stopping"])).
 
 fixture_teardown_test() ->
   meck:unload().

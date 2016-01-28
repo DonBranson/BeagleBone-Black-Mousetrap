@@ -15,9 +15,6 @@ Sample Config
 
     [
       {mousetrap, [
-        {slack_user, "mousetrap"},
-        {slack_channel, "#mousetrap"},
-        {slack_token, "<slack token here>"},
         {pins_export_file, "/sys/class/gpio/export"},
         {pins_root_directory, "/sys/class/gpio/gpio"},
         {pins, [
@@ -26,8 +23,13 @@ Sample Config
           {gpio1, 16, "3 (in the kitchen pantry)"},
           {gpio0, 5, "4 (Not yet wired)"}
         ]},
-        {quiet_minutes, 5},
+        {quiet_minutes, 30},
         {pin_check_interval_seconds, 1}
+      ]},
+      {slack, [
+        {slack_user, "mousetrap"},
+        {slack_channel, "#mousetrap"},
+        {slack_token, "<slack token here>"}
       ]}
     ].
 

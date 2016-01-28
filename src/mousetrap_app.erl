@@ -6,10 +6,10 @@
 start(_Type, _Args) ->
 	inets:start(),
 	ssl:start(),
-	notification_library:notify("Mousetrap starting"),
+	notification_library:notify("@channel Mousetrap starting"),
 	mousetrap_sup:start_link().
 
 stop(_State) ->
-	notification_library:notify("Mousetrap stopping"),
+	notification_library:notify("@here Mousetrap stopping"),
   mousetrap_sup:stop(),
 	ok.
