@@ -20,7 +20,7 @@ terminate_returns_ok_test() ->
 
 handle_cast_sends_notification_when_a_mouse_is_caught_test() ->
   {noreply, _LoopData} = mousetrap_server:handle_cast({open, #pin{description = "test pin"}}, state),
-  ?assert(meck:called(notification_library, notify, ["Mousetrap test pin has caught a mouse."])).
+  ?assert(meck:called(notification_library, notify, ["@channel Mousetrap test pin has caught a mouse."])).
 
 handle_cast_sends_notification_when_trap_is_reset_test() ->
   {noreply, _LoopData} = mousetrap_server:handle_cast({closed, #pin{description = "test pin"}}, state),
