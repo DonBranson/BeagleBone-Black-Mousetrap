@@ -5,7 +5,6 @@ PROJECT_REGISTERED = mousetrap
 
 TEST_DEPS = meck
 DEPS = slack
-dep_slack = git git@github.com:DonBranson/slack.git
 
 include erlang.mk
 

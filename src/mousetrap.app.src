@@ -1,0 +1,15 @@
+{application, mousetrap, [
+      {description, "BeagleBone Black mousetrap application"},
+    {vsn, "1.0.0"},
+    {modules, []},
+    {registered, []},
+    {applications, [
+        kernel,
+        stdlib,
+        inets,
+        ssl,
+        slack
+    ]},
+    {mod, {mousetrap_app, []}},
+    {env, []}
+]}.
