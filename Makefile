@@ -10,3 +10,6 @@ include erlang.mk
 
 observe:
 	erl -sname observer -hidden -setcookie mousetrap -run observer
+
+deploy: rel
+	rsync -a _rel/mousetrap/ bbb01:mousetrap/
